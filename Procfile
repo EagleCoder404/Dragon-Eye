@@ -1,1 +1,1 @@
-web: gunicorn proctor:app -k eventlet
+web: gunicorn proctor:app -k eventlet -w 1
