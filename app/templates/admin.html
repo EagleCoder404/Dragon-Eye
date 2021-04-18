@@ -11,6 +11,7 @@
         socket.emit('my event', {data: 'I\'m connected!'});
     }); 
     socket.on('response_back',function(data){
+        console.log("Got some data")
         img.src = data
     })
 </script>
