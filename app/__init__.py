@@ -13,6 +13,6 @@ migrate = Migrate(app,db)
 login = LoginManager(app)
 login.login_view = 'login'
 socketio = SocketIO(app)
-
+socketio.init_app(app, cors_allowed_origins="*")
 
 from app import routes, models
