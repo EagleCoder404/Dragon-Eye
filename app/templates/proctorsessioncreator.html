@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+    Create Proctor Session Here
+    <form method="post" style="display:flex;flex-direction:column;">
+        {{form.hidden_tag()}}
+        <div>
+            {{form.session_name.label()}} <br>
+            {{form.session_name()}}
+            {% for error in form.session_name.errors %}
+                <span style='color:red;display:block'> {{error}} </span>
+            {% endfor %}
+        </div>
+        <div>
+            {{form.start_time.label}} <br>
+            {{form.start_time}}
+            {% for error in form.start_time.errors %}
+                <span style='color:red;display:block'> {{error}} </span>
+            {% endfor %}
+        </div>
+        <div>
+            {{form.end_time.label}} <br>
+            {{form.end_time}}
+            {% for error in form.end_time.errors %}
+                <span style='color:red;display:block'> {{error}} </span>
+            {% endfor %}
+        </div>
+        <div>
+            {% for session_user in form.session_users %}
+                <br>
+                <div>
+                    {{session_user.hidden_tag()}}
+                    <div>
+                        
+                        <label>{{session_user.username.label}}</label>
+                        {{session_user.username}}
+                        {% for error in session_user.username.errors %}
+                            <span style="color:red;display:block"> {{error}}</span>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <label>{{session_user.email.label}}</label>
+                        {{session_user.email}}
+                        {% for error in session_user.email.errors %}
+                            <span style="color:red;display:block"> {{error}}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+        {{form.submit}}
+    </form>
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    Proctor Home
+    <div>
+        <nav style='border-bottom:1px solid red'>
+            <ul>
+                <li><a href="{{url_for('proctor.session_create')}}">Create a Proctor Session</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div>
+        <h1>Proctor Sessions</h1>
+        <ol>
+            {% for x in proctor_session_data %}
+            <li>
+                <a href="{{url_for('proctor.session_details', id=x.id)}}"> {{x.name}} </a>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endblock content %}
