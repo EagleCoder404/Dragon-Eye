@@ -24,21 +24,24 @@ def session_create():
         duration = (end_time - start_time).total_seconds()
         token_duration = (end_time - datetime.now()).total_seconds()
         
+        #create a Proctor Session
         ps = ProctorSession(name=session_name, start_time=start_time, end_time=end_time, duration=duration, user_id=current_user)
         db.session.add(ps)
+        
         susers = []
+        #create session user for Proctor Session
         for suser in form.session_users:
              user = SessionUser(name=suser.username.data, email=suser.email.data, proctor_session=ps, token="token not set yet")
              db.session.add(user)
              susers.append(user)
-        db.session.commit()
+        db.session.commit() #commit changes to db so that ids are assigned.
 
         for suser in susers:
             suser.generate_auth_token(token_duration)
             db.session.add(suser)
         db.session.commit()
 
-        return "Form Submitted"
+        return redirect(url_for("proctor.index"))
     else:
         return render_template("proctorsessioncreator.html", form=form)
 

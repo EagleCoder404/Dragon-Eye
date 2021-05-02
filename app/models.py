@@ -38,8 +38,8 @@ class ProctorSession(db.Model):
 
 class SessionUser(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    name = db.Column(db.String(), nullable=False, unique=True)
-    email = db.Column(db.String(), nullable=False)
+    name = db.Column(db.String(), nullable=False)
+    email = db.Column(db.String(), nullable=False,index=True, unique=True)
     token = db.Column(db.String(), nullable=False)
     proctor_id = db.Column(db.Integer, db.ForeignKey('proctor_session.id'))
 

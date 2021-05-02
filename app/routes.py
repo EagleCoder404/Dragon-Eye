@@ -13,16 +13,3 @@ def index():
     test = socketio.async_mode
     return render_template('index.html')
 
-
-
-# @app.route('/admin')
-# def admin():
-#     return render_template('admin.html')
-
-# @app.route('/client')
-# def client():
-#     return render_template('client.html')
-
-# @socketio.on('image')
-# def image(data):
-#     socketio.emit('response_back',data)
