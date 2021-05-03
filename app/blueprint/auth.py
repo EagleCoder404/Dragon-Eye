@@ -1,9 +1,9 @@
-from flask import Blueprint, flash, redirect, url_for, render_template, flash
+from flask import Blueprint, flash, redirect, url_for, render_template, flash, jsonify
 from flask_login import login_user, logout_user
 from app.models import User, SessionUser
 from app import db
 from app.forms import LoginForm, RegistrationForm
-
+from datetime import datetime
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 @bp.route('/login',methods=['GET','POST'])
@@ -42,12 +42,13 @@ def register():
 def token_login(token):
     user = SessionUser.verify_auth_token(token)
     if user is None:
-        return "Token Not Valid"
+        return {'msg':'user not found'}
+    elif user.__class__ == str:
+        return {'msg':user}
     else:
-        login_user(user)
-        print(user)
-        return redirect(url_for("examinee.index"))
-    
+        data = { 'name':ps.name, 'id':ps.id,'start_time':ps.start_time,'end_time':ps.end_time,'duration':ps.duration}
+        return { 'msg':"GOOD_TOKEN", "data":data}
+        
 @bp.route('/logout')
 def logout():
     logout_user()

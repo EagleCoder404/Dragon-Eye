@@ -2,6 +2,7 @@ from sqlalchemy.orm import backref
 from app import db, login, app
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from datetime import datetime
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
 @login.user_loader
@@ -27,8 +28,8 @@ class User(db.Model, UserMixin):
 class ProctorSession(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(), unique=True, index=True, nullable=False)
-    start_time = db.Column(db.DateTime,nullable=False)
-    end_time = db.Column(db.DateTime, nullable=False)
+    start_time = db.Column(db.DateTime(timezone=True),nullable=False)
+    end_time = db.Column(db.DateTime(timezone=True), nullable=False)
     duration = db.Column(db.Integer, nullable=False)
     parent_user_id = db.Column(db.Integer, db.ForeignKey('user.id')) 
     session_users = db.relationship("SessionUser", backref="proctor_session", lazy='dynamic' )
@@ -52,14 +53,10 @@ class SessionUser(db.Model, UserMixin):
         s = Serializer(app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
-            print(data)
         except SignatureExpired:
-            print("Token Duration Expire")
-            return None
+            return "TOKEN_EXPIRE"
         except BadSignature:
-            print("Token Bad Signature")
-            return None
-            
+            return "BAD_TOKEN"            
         user = SessionUser.query.get(data['id'])
         return user
     
