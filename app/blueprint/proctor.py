@@ -4,8 +4,13 @@ from app.models import ProctorSession, SessionUser
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required, current_user
 from datetime import datetime
+from pytz import timezone
 bp = Blueprint("proctor", __name__, url_prefix="/proctor")
 
+def localToUtc(date):
+    IST = timezone("asia/kolkata")
+    UTC = timezone('utc')
+    return IST.localize(date).astimezone(UTC)
 @bp.route("/", methods=["GET"])
 @login_required
 def index():
@@ -19,11 +24,11 @@ def session_create():
     form = ProctorSessionForm()
     if form.validate_on_submit():
         session_name = form.session_name.data
-        start_time = form.start_time.data
-        end_time = form.end_time.data
+        start_time = localToUtc(form.start_time.data)
+        end_time = localToUtc(form.end_time.data)
         duration = (end_time - start_time).total_seconds()
-        token_duration = (end_time - datetime.now()).total_seconds()
-        
+        token_duration = (end_time - localToUtc(datetime.now())).total_seconds()
+        print(start_time,end_time,duration)
         #create a Proctor Session
         ps = ProctorSession(name=session_name, start_time=start_time, end_time=end_time, duration=duration, user_id=current_user)
         db.session.add(ps)

@@ -8,8 +8,8 @@
                     <td>Name</td><td>{{data.name}}</td>
                 </tr>
                 <tr>
-                    <td>Start Time</td><td>{{data.start_time}}</td>
-                    <td>End Time</td><td>{{data.end_time}}</td>
+                    <td>Start Time</td><td>{{moment(data.start_time).format('LLL')}}</td>
+                    <td>End Time</td><td>{{moment(data.end_time).format('LLL')}}</td>
                 </tr>
                 <tr>
                     <td colspan="2">Duration</td>

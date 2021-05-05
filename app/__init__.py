@@ -4,11 +4,15 @@ from flask_migrate import Migrate
 from config import Config
 from flask_login import LoginManager
 from flask_socketio import SocketIO
+from flask_moment import Moment
+
+
 app = Flask(__name__)
 app.hcount = 1
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
+moment = Moment(app)
 login = LoginManager(app)
 login.login_view = 'auth.login'
 socketio = SocketIO(app)

@@ -3,9 +3,12 @@ from flask_login import login_user, logout_user
 from app.models import User, SessionUser
 from app import db
 from app.forms import LoginForm, RegistrationForm
-from datetime import datetime
+from datetime import datetime, time
+from pytz import timezone
 bp = Blueprint("auth", __name__, url_prefix="/auth")
-
+def toUTC(date):
+    utc = timezone('utc')
+    return utc.localize(date)
 @bp.route('/login',methods=['GET','POST'])
 def login():
     form = LoginForm()
@@ -47,7 +50,8 @@ def token_login(token):
         return {'msg':user}
     else:
         ps = user.proctor_session
-        data = { 'name':ps.name, 'id':ps.id,'start_time':ps.start_time,'end_time':ps.end_time,'duration':ps.duration}
+
+        data = { 'name':ps.name, 'id':ps.id,'start_time':toUTC(ps.start_time).isoformat(),'end_time':toUTC(ps.end_time).isoformat(),'duration':ps.duration}
         return { 'msg':"GOOD_TOKEN", "data":data}
         
 @bp.route('/logout')

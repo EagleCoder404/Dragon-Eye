@@ -7,7 +7,7 @@ from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSign
 
 @login.user_loader
 def load_user(id):
-    return User.query.get(int(id)) or SessionUser.query.get(int(id))
+    return User.query.get(int(id)) or SessionUser.queryTimedJSONWebSignatureSerializer.get(int(id))
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -46,10 +46,11 @@ class SessionUser(db.Model, UserMixin):
 
     def generate_auth_token(self, duration):
         s = Serializer(app.config['SECRET_KEY'], expires_in = duration)
-        self.token = s.dumps({'id':self.id})
+        self.token = s.dumps({'id':self.id}).decode("utf-8")
 
     @staticmethod
     def verify_auth_token(token):
+        print(type(token))
         s = Serializer(app.config['SECRET_KEY'])
         try:
             data = s.loads(token)

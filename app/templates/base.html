@@ -9,6 +9,8 @@
     {% block head %}
         
     {% endblock head %}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
 </head>
 <body>
     {% with messages = get_flashed_messages() %}
