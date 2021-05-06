@@ -7,7 +7,7 @@ from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSign
 
 @login.user_loader
 def load_user(id):
-    return User.query.get(int(id)) or SessionUser.queryTimedJSONWebSignatureSerializer.get(int(id))
+    return User.query.get(int(id)) or SessionUser.query.get(int(id))
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,6 +54,7 @@ class SessionUser(db.Model, UserMixin):
         s = Serializer(app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
+            print(data)
         except SignatureExpired:
             return "TOKEN_EXPIRE"
         except BadSignature:

@@ -28,9 +28,7 @@
             {% for session_user in form.session_users %}
                 <br>
                 <div>
-                    {{session_user.hidden_tag()}}
                     <div>
-                        
                         <label>{{session_user.username.label}}</label>
                         {{session_user.username}}
                         {% for error in session_user.username.errors %}
