@@ -24,7 +24,7 @@
                 <span style='color:red;display:block'> {{error}} </span>
             {% endfor %}
         </div>
-        <div>
+        <div id='session-users-box'>
             {% for session_user in form.session_users %}
                 <br>
                 <div>
@@ -45,7 +45,31 @@
                 </div>
             {% endfor %}
         </div>
+        <button onclick="addSessionUserForm()">Add User</button>
         <br>
         {{form.submit}}
     </form>
+    <script>
+        let last_id=1;
+        function renderSessionUserForm(id){
+            return(`
+                <br>
+                <div>
+                    <div>
+                        <label><label for="session_users-${id}-username">Enter Name</label></label>
+                        <input id="session_users-${id}-username" name="session_users-${id}-username" required="" type="text" >
+                    </div>
+                    <div>
+                        <label><label for="session_users-${id}-email">Enter Email</label></label>
+                        <input id="session_users-${id}-email" name="session_users-${id}-email" required="" type="text" >
+                    </div>
+                </div>
+            `)
+        }
+        function addSessionUserForm(){
+            last_id += 1;
+            const sessionUserForm = renderSessionUserForm(last_id)
+            $('#session-users-box').append(sessionUserForm)
+        }
+    </script>
 {% endblock content %}

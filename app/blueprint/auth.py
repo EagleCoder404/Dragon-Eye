@@ -5,10 +5,13 @@ from app import db
 from app.forms import LoginForm, RegistrationForm
 from datetime import datetime, time
 from pytz import timezone
+
 bp = Blueprint("auth", __name__, url_prefix="/auth")
+
 def toUTC(date):
     utc = timezone('utc')
     return utc.localize(date)
+
 @bp.route('/login',methods=['GET','POST'])
 def login():
     form = LoginForm()
@@ -53,7 +56,7 @@ def token_login(token):
 
         data = { 'name':ps.name, 'id':ps.id,'start_time':toUTC(ps.start_time).isoformat(),'end_time':toUTC(ps.end_time).isoformat(),'duration':ps.duration}
         return { 'msg':"GOOD_TOKEN", "data":data}
-        
+
 @bp.route('/logout')
 def logout():
     logout_user()

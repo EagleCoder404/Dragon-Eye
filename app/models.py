@@ -1,5 +1,6 @@
 from sqlalchemy.orm import backref
-from app import db, login, app
+from flask import current_app
+from app import db, login, tokenAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
@@ -8,6 +9,12 @@ from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSign
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id)) or SessionUser.query.get(int(id))
+
+@tokenAuth.verify_token
+def verify_token(token):
+    print(str(token))
+    user = SessionUser.verify_auth_token(token)
+    return user
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,25 +47,28 @@ class ProctorSession(db.Model):
 class SessionUser(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(), nullable=False)
-    email = db.Column(db.String(), nullable=False,index=True, unique=True)
+    email = db.Column(db.String(), nullable=False)
     token = db.Column(db.String(), nullable=False)
+    id_card = db.Column(db.String())
     proctor_id = db.Column(db.Integer, db.ForeignKey('proctor_session.id'))
 
     def generate_auth_token(self, duration):
-        s = Serializer(app.config['SECRET_KEY'], expires_in = duration)
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in = duration)
         self.token = s.dumps({'id':self.id}).decode("utf-8")
 
     @staticmethod
     def verify_auth_token(token):
         print(type(token))
-        s = Serializer(app.config['SECRET_KEY'])
+        s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
             print(data)
         except SignatureExpired:
-            return "TOKEN_EXPIRE"
+            print("token expire")
+            return None
         except BadSignature:
-            return "BAD_TOKEN"            
+            print("bad token")
+            return None
         user = SessionUser.query.get(data['id'])
         return user
     
