@@ -1,50 +1,56 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class='container is-centered p-5 mt-5'>
-    <div class='columns is-centered is-vcentered'>
-        <div class='column is-half'>
-            <form class='box' method="POST" novalidate>
-                {{form.hidden_tag()}}
-        
-                <div class='field'>
-                    <label class='label'>
-                        {{form.username.label}}
-                    </label>
-                    <div class='control'>
-                        {{form.username(size=32, class="input", autocomplete="off")}}
-                    </div>
-                    <div class='help is-danger'>
-                        {% for error in form.username.errors %}
-                            <span> {{error}} </span>
-                        {% endfor %}
-                    </div>
+<div class='container is-max-desktop mt-6 pt-6'>
+            <div class='columns is-centered'>
+                <div class='column is-half'>
+
+                    <form class='box' method="POST" novalidate>
+                        <h1 class='title has-text-centered'>
+                            <strong>
+                                Login
+                            </strong>
+                        </h1>
+                        {{form.hidden_tag()}}
+                
+                        <div class='field'>
+                            <label class='label'>
+                                {{form.username.label}}
+                            </label>
+                            <div class='control'>
+                                {{form.username(size=32, class="input", autocomplete="off")}}
+                            </div>
+                            <div class='help is-danger'>
+                                {% for error in form.username.errors %}
+                                    <span> {{error}} </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                
+                        <div class='field'>
+                            <label class='label'>
+                                {{form.password.label}}
+                            </label>
+                            <div class='control'>
+                                {{form.password(size=32, class='input', autocomplete="off")}}
+                            </div>
+                            {% for error in form.password.errors %}
+                            <div class='help is-danger'>
+                                <span> {{error}} </span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                
+                        <div class='field is-grouped'>
+                            <div class='control'>
+                                {{form.submit(class='button is-success')}}
+                            </div>
+                            <div class='control'>
+                                <a href="{{url_for('auth.register')}}" class='button is-info is-outlined'>Register</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-        
-                <div class='field'>
-                    <label class='label'>
-                        {{form.password.label}}
-                    </label>
-                    <div class='control'>
-                        {{form.password(size=32, class='input', autocomplete="off")}}
-                    </div>
-                    {% for error in form.password.errors %}
-                    <div class='help is-danger'>
-                        <span> {{error}} </span>
-                    </div>
-                    {% endfor %}
-                </div>
-        
-                <div class='field is-grouped'>
-                    <div class='control'>
-                        {{form.submit(class='button is-primary')}}
-                    </div>
-                    <div class='control'>
-                        <a href="{{url_for('auth.register')}}" class='button is-secondary'>Register</a>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+            </div>
 </div>
 {% endblock content %}
