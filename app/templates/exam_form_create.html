@@ -1,0 +1,71 @@
+{% extends 'proctor_base.html' %}
+{% block proctor %}
+<div class='container mt-3'>
+    <form method="post">
+
+        {{ form.hidden_tag() }}
+        <div class='field'>
+            <label for="" class='label'>
+                {{form.proctor_id.label}}
+            </label>
+            <div class='select'>
+                {{form.proctor_id(class='')}}
+            </div>
+            <p class='help is-danger'>
+                {% for error in form.proctor_id.errors %}
+                    <span>
+                        {{error}}
+                    </span>
+                {% endfor %} 
+            </p>
+        </div>
+        
+        <div id="exam-questions-box" class='field'>
+            {% for exam_question in form.exam_questions %}
+                <div class='field'>
+                    <label class='label'>
+                        {{ exam_question.question.label }}
+                    </label>
+                    <div class='control'>
+                        {{ exam_question.question(class='input') }}
+                    </div>
+                    <p class='help is-danger'>
+                        {% for error in exam_question.errors %}
+                            <span>
+                                {{error}}
+                            </span>
+                        {% endfor %}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class='field is-grouped'>
+            <p class="control">
+                <button onclick="addQuestion(event)" class='button is-primary'>  Add Question </button>
+            </p>
+            <p class='control'>
+                {{ form.submit( class='button is-success is-outlined') }}
+            </p>
+        </div>
+    </form>
+</div>
+<script>
+    let last_id=1;
+    function renderQuestion(id){
+        return(`
+                <div class="field">
+                    <label for="exam_questions-${id}-question" class='label'>Enter Question Text</label>
+                    <div class='control'>
+                        <input id="exam_questions-${id}-question" name="exam_questions-${id}-question" class="input" required="" type="text" >
+                    </div>
+                </div>
+        `)
+    }
+    function addQuestion(e){
+        e.preventDefault()
+        last_id += 1;
+        const component = renderQuestion(last_id)
+        $('#exam-questions-box').append(component)
+    }
+</script>
+{% endblock proctor %}

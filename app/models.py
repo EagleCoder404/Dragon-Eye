@@ -22,6 +22,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     proctor_sessions = db.relationship("ProctorSession", backref="user_id", lazy='dynamic')
+    exam_forms = db.relationship("ExamForm", backref="user_id", lazy='dynamic')
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
     
@@ -39,6 +41,7 @@ class ProctorSession(db.Model):
     end_time = db.Column(db.DateTime(timezone=True), nullable=False)
     duration = db.Column(db.Integer, nullable=False)
     parent_user_id = db.Column(db.Integer, db.ForeignKey('user.id')) 
+    exam_form = db.relationship("ExamForm", backref="proctor_session", lazy='dynamic')
     session_users = db.relationship("SessionUser", backref="proctor_session", lazy='dynamic' )
 
     def __repr__(self):
@@ -49,7 +52,7 @@ class SessionUser(db.Model, UserMixin):
     name = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
     token = db.Column(db.String(), nullable=False)
-    id_card = db.Column(db.String())
+    id_card = db.Column(db.String(), nullable=True)
     proctor_id = db.Column(db.Integer, db.ForeignKey('proctor_session.id'))
 
     def generate_auth_token(self, duration):
@@ -75,3 +78,12 @@ class SessionUser(db.Model, UserMixin):
     def __repr__(self):
         return (" -{id}-   {name}\n\t{email}\n\t{token}\n\t{proctor_id} ".format(id=self.id or "ID",name=self.name, email=self.email, token=self.token, proctor_id=self.proctor_id))
 
+
+class ExamForm(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    form_description = db.Column(db.String(), nullable=False, unique=True)
+    parent_user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    proctor_id = db.Column(db.Integer, db.ForeignKey("proctor_session.id"))
+
+    def __repr__(self):
+        return f' - {self.id}  {self.form_description}'

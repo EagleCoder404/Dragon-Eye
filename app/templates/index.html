@@ -1,8 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1> hello There</h1>
-    <a href="{{url_for('auth.login')}}">Login </a>
-    <a href="{{url_for('auth.register')}}">Register </a>
-    {{test}}
+<nav class="navbar has-background-dark" role="navigation" aria-label="main navigation">
+
+    <div class="navbar-end">
+        <div class="navbar-item">
+            <div class="buttons">
+                <a class="button is-primary" href="{{url_for('auth.login')}}">
+                    <strong>Login</strong>
+                </a>
+                <a class="button is-light" href="{{url_for('auth.register')}}">
+                    Sign Up
+                </a>
+            </div>
+        </div>
+    </div>
+
+</nav>
+
 {% endblock content %}

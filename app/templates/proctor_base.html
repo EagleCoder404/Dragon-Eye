@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <div class='navbar-start '>
+        <a class="navbar-item" href="{{url_for('proctor.index')}}">
+            Home
+        </a>
+        <a class="navbar-item" href="{{url_for('proctor.session_create')}}">
+            Create Session
+        </a>
+        <a class="navbar-item" href="{{url_for('proctor.exam_form_create')}}">
+            Create Exam Form
+        </a>
+    </div>
+</nav>
+{% block proctor %}
+
+{% endblock proctor%}
+{% endblock content %}

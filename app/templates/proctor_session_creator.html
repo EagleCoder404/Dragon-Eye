@@ -1,0 +1,131 @@
+{% extends 'proctor_base.html' %}
+{% block proctor %}
+
+    <div class='container my-3'>
+
+        <form method="post" >
+            <div class='box'>
+                <h1 class='title'>
+                    Test Details
+                </h1>
+                {{form.hidden_tag()}}
+    
+                <div class='field'>
+                    <label class='label'>
+                        {{form.session_name.label}} <br>
+                    </label>
+                    <div class='control'>
+                        {{form.session_name(class='input')}}
+                    </div>
+                    <p class='help is-danger'>
+                        {% for error in form.session_name.errors %}
+                            <span> {{error}} </span>
+                        {% endfor %}
+                    </p>
+                </div>
+    
+                <div class='columns'>
+                    <div class='column'>
+                        <div class='field'>
+                            <label class='label' for="">{{form.start_time.label}} </label>
+                            <div class='control'>
+                                {{form.start_time(class='input')}}
+                            </div>
+                            <p class='help is-danger'>
+                                {% for error in form.start_time.errors %}
+                                    <span > {{error}} </span>
+                                {% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class='column'>
+                        <div class='field'>
+                            <label for="" class='label'>{{form.end_time.label}} </label>
+                            <div class='control'>
+                                {{form.end_time(class='input')}}
+                            </div>
+                            <p class='help is-dange'>
+                                {% for error in form.end_time.errors %}
+                                    <span > {{error}} </span>
+                                {% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id='session-users-box' class='box'>
+                <h1 class='title'>
+                    Student Details
+                </h1>
+                {% for session_user in form.session_users %}
+                    <div class='columns'>
+                        <div class='field column'>
+                            <label class='label'>{{session_user.username.label}}</label>
+                            <div class='control'>
+                                {{session_user.username(class='input')}}
+                            </div>
+                            <p class='help is-danger'>
+                                {% for error in session_user.username.errors %}
+                                    <span> {{error}}</span>
+                                {% endfor %}
+                            </p>
+                        </div>
+                        <div class='field column'>
+                            <label class='label'>{{session_user.email.label}}</label>
+                            <div class='control'>
+                                {{session_user.email(class="input")}}
+                            </div>
+                            <p class='help is-danger'> 
+                                {% for error in session_user.email.errors %}
+                                    <span style="color:red;display:block"> {{error}}</span>
+                                {% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class='field is-grouped'>
+                <div class='control'>
+                    <button onclick="addSessionUserForm(event)" id='add-user' class='button is-link is-outlined'>Add User</button>
+                </div>
+                <div class='control'>
+                    {{form.submit(class="button is-success")}}
+                </div>
+            </div>
+
+
+        </form>
+
+    </div>
+
+    <script>
+        let last_id=1;
+        function renderSessionUserForm(id){
+            return(`
+                <div class='columns'>
+                    <div class='field column'>
+                        <label class='label' for="session_users-${id}-username">Enter Name</label>
+                        <div class='control'>
+                            <input id="session_users-${id}-username" class="input" name="session_users-${id}-username" required="" type="text" >
+                        </div>
+                    </div>
+                    <div class='column field'>
+                        <label class="label" for="session_users-${id}-email">Enter Email</label>
+                        <div class='control'>
+                            <input id="session_users-${id}-email" name="session_users-${id}-email" class='input' required="" type="text" >
+                        </div>
+                    </div>
+                </div>
+            `)
+        }
+        function addSessionUserForm(e){
+            console.log(e.preventDefault())
+            last_id += 1;
+            const sessionUserForm = renderSessionUserForm(last_id)
+            $('#session-users-box').append(sessionUserForm)
+            window.location.hash='#add-user'
+        }
+    </script>
+
+{% endblock proctor %}

@@ -1,0 +1,80 @@
+{% extends 'proctor_base.html' %}
+{% block proctor %}
+    <div class='container mt-3'>
+
+        <div class='box'>
+            <h1 class='title is-capitalized'>
+                {{data.name}}
+            </h1>
+            <h2 class='subtitle is-6'>
+                Proctor Id : {{data.id}}
+            </h2>
+            <p>
+                <span class='has-text-weight-bold'>
+                    Starts at 
+                </span> {{moment(data.start_time).format('LLL')}}
+            </p>
+            <p>
+                <span class='has-text-weight-bold'>
+                    Ends at 
+                </span> {{moment(data.end_time).format('LLL')}}
+            </p>
+            <p>
+                <span class='has-text-weight-bold'>
+                    Duration 
+                </span> {{data.duration//60}} minutes
+            </p>
+        </div>
+
+        <div class='box'>
+            <h1 class='title is-capitalized'>
+                Student Details
+            </h1>
+            <div class='table-container'>
+                <table class='table is-fullwidth'>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Token</th>
+                        </tr>
+                    </thead>
+                    <tr class='is-primary'>
+                    </tr>
+                    {% for user in data.session_users %}
+                        <tr>
+                            <td>
+                                {{user.name}}
+                            </td>
+                            <td>
+                                {{user.email}}
+                            </td>
+                            <td colspan="2">
+                                {{user.token}}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <div class='box'>
+            <h1 class='title is-capitalized'>
+                Exam Form Details
+            </h1>
+            <h2 class='title is-5'>
+                Questions
+            </h2>
+            <div class=" pl-3 is-flex is-flex-direction-column">
+                {% if exam_form != None %}
+                    {% for question in exam_form['exam_questions'] %}
+                    <div>
+                        {{ question['question_text'] }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+        
+</div>
+{% endblock proctor %}

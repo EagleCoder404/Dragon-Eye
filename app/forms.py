@@ -1,13 +1,10 @@
-from flask.app import Flask
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateTimeField, Form,HiddenField
+from flask_login import current_user
+from wtforms import StringField, PasswordField, SubmitField, Form, SelectField
 from wtforms.fields.core import FieldList, FormField
 from wtforms.validators import InputRequired, EqualTo, Email, ValidationError
-from wtforms.widgets.core import Input
 from wtforms.fields.html5 import DateTimeLocalField
 from app.models import ProctorSession
-from datetime import datetime
-from pytz import timezone
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[InputRequired()])
@@ -35,9 +32,15 @@ class ProctorSessionForm(FlaskForm):
     def validate_session_name(form, field):
         session_name = field.data
         if ProctorSession.query.filter_by(name=session_name).first():
-            raise ValidationError("Name Taken, choose another")
+            raise ValidationError("Name Taken, choose another")        
     
+class ExamQuestionForm(Form):
+    question = StringField("Enter Question Text", validators=[InputRequired()])
 
+class ExamFormForm(FlaskForm):
+    proctor_id = SelectField("Proctor Session",coerce=int, validators=[InputRequired()])
+    exam_questions = FieldList(FormField(ExamQuestionForm), min_entries=2)
+    submit = SubmitField("Create Exam Form")
 
     
 

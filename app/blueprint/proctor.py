@@ -1,7 +1,8 @@
-from app.forms import ProctorSessionForm
+from sqlalchemy.orm import eagerload
+from app.forms import ProctorSessionForm, ExamFormForm
 from app import db
-from app.models import ProctorSession, SessionUser
-from flask import Blueprint, render_template, redirect, url_for
+from app.models import ProctorSession, SessionUser, ExamForm
+from flask import Blueprint, render_template, redirect, url_for, json
 from flask_login import login_required, current_user
 from datetime import datetime
 from pytz import timezone
@@ -11,6 +12,7 @@ def localToUtc(date):
     IST = timezone("asia/kolkata")
     UTC = timezone('utc')
     return IST.localize(date).astimezone(UTC)
+
 @bp.route("/", methods=["GET"])
 @login_required
 def index():
@@ -32,9 +34,7 @@ def session_create():
         #create a Proctor Session
         ps = ProctorSession(name=session_name, start_time=start_time, end_time=end_time, duration=duration, user_id=current_user)
         db.session.add(ps)
-        
         susers = []
-        #create session user for Proctor Session
         for suser in form.session_users:
              user = SessionUser(name=suser.username.data, email=suser.email.data, proctor_session=ps, token="token not set yet")
              db.session.add(user)
@@ -48,12 +48,46 @@ def session_create():
 
         return redirect(url_for("proctor.index"))
     else:
-        return render_template("proctorsessioncreator.html", form=form)
+        return render_template("proctor_session_creator.html", form=form)
 
 @bp.route("/session_details/<id>")
+@login_required
 def session_details(id):
-    ps = ProctorSession.query.get(id)
-    if ps is None:
+    proctor_session = ProctorSession.query.get(id)
+    if proctor_session is None:
         return "Session not Found"
     else:
-        return render_template("proctorsessiondetails.html", data = ps)
+        form_description = None
+        if proctor_session.exam_form.count() > 0 :
+            exam_form = list(proctor_session.exam_form)[0]
+            form_description_json = exam_form.form_description
+            form_description = json.loads(form_description_json)
+        return render_template("proctor_session_details.html", data = proctor_session, exam_form = form_description)
+
+@bp.route("/exam_form/create/",methods=['GET',"POST"])
+@login_required
+def exam_form_create():
+    form = ExamFormForm()
+    form.proctor_id.choices = [(x.id, x.name) for x in current_user.proctor_sessions]
+    if form.validate_on_submit():
+        questions = []
+        proctor_id = form.proctor_id.data
+        
+        target_proctor_session = ProctorSession.query.get(proctor_id)
+        
+        for exam_question in form.exam_questions:
+        
+            q = { 
+                "question_text": exam_question.question.data
+            }
+            questions.append(q)
+        
+        form_description = { 'exam_questions':questions }
+        form_description_json = json.dumps(form_description)
+        exam_form = ExamForm(user_id=current_user, proctor_session=target_proctor_session, form_description=form_description_json)
+        
+        db.session.add(exam_form)
+        db.session.commit()
+
+        return redirect(url_for("proctor.index"))
+    return render_template("exam_form_create.html", form=form)
