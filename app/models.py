@@ -12,9 +12,14 @@ def load_user(id):
 
 @tokenAuth.verify_token
 def verify_token(token):
-    print(str(token))
+    
     user = SessionUser.verify_auth_token(token)
-    return user
+    if user == "TOKEN_EXPIRE":
+        return None
+    elif user == "TOKEN_BAD":
+        return None
+    else:
+        return user
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -52,6 +57,7 @@ class SessionUser(db.Model, UserMixin):
     name = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
     token = db.Column(db.String(), nullable=False)
+    details = db.Column(db.JSON(), default="\{\}")
     id_card = db.Column(db.String(), nullable=True)
     proctor_id = db.Column(db.Integer, db.ForeignKey('proctor_session.id'))
 
@@ -61,17 +67,14 @@ class SessionUser(db.Model, UserMixin):
 
     @staticmethod
     def verify_auth_token(token):
-        print(type(token))
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
             print(data)
         except SignatureExpired:
-            print("token expire")
-            return None
+            return "TOKEN_EXPIRE"
         except BadSignature:
-            print("bad token")
-            return None
+            return "TOKEN_BAD"
         user = SessionUser.query.get(data['id'])
         return user
     

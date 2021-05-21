@@ -1,8 +1,9 @@
 from sqlalchemy.orm import selectin_polymorphic
 from app.models import User, ProctorSession, SessionUser
-from app import db
+from app import db, create_app
 from sqlalchemy import exc
 from pytz import timezone
+from time import sleep
 
 def toUtc(d):
     utc = timezone("utc")
@@ -32,11 +33,26 @@ def test_duplicate_user(app):
 
 def test_proctor_session(app, new_user, start_time, end_time):
     duration = (end_time - start_time).total_seconds()
-    proctor_session = ProctorSession(name='test', start_time = start_time, end_time=end_time,duration=duration, user_id=new_user)
+    proctor_session = ProctorSession(name='test', start_time=start_time, end_time=end_time, duration=duration, user_id=new_user)
     db.session.add(new_user)
     db.session.add(proctor_session)
     db.session.commit()
 
+
     assert proctor_session.name == 'test'    
     assert toUtc(proctor_session.start_time) == start_time
     assert toUtc(proctor_session.end_time) == end_time
+
+def test_session_user(app, new_session_user):
+    new_session_user.generate_auth_token(1)
+    token = new_session_user.token
+
+    db.session.add(new_session_user)
+    db.session.commit()
+    
+    assert token != None
+    assert SessionUser.verify_auth_token(token).id == new_session_user.id
+
+    sleep(2) # wait for the token to expire
+
+    assert SessionUser.verify_auth_token(token) == "TOKEN_EXPIRE"

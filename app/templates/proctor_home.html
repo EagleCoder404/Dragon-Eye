@@ -7,10 +7,8 @@
                 <div class='box'>
                     <div class='level'>
                         <div class='level-left'>
-                            <h1 class='level-item is-capitalized'>
-                                <strong>
+                            <h1 class='level-item has-text-weight-medium is-capitalized is-size-5'>
                                     {{x.name}}
-                                </strong>
                             </h1>
                             <div class=' level-item  has-text-left'>
                                     <p>
@@ -19,17 +17,39 @@
                             </div>
                         </div>
                         <div class='level-right'>
-                            <a href="{{url_for('proctor.session_details', id=x.id)}}" class='button is-primary level-item'>
+                            <p class='level-item'>
+                                <strong>
+                                    Status :
+                                    {% if  now < x.start_time %}
+                                    <span class='has-text-info'>
+                                        Scheduled
+                                    </span>    
+                                    {% elif (now > x.start_time) and (now < x.end_time) %}
+                                    <span class='has-text-success'>
+                                        Running
+                                    </span> 
+                                    {% elif now > x.end_time %}
+                                    <span class='has-text-danger'>
+                                        Ended
+                                    </span> 
+                                    {% else %}
+                                    <span class='has-text-danger-dark'>
+                                        Unkown
+                                    </span> 
+                                    {% endif %}
+                                </strong>
+                            </p>
+                            <a href="{{url_for('proctor.session_details', id=x.id)}}" class='button is-link is-outlined level-item'>
                                 <strong>
                                     View
                                 </strong>
                             </a>
-                            <a href="#" class='button is-danger level-item'>
+                            <a href="#" class='button is-danger level-item is-outlined'>
                                 <strong>
                                     Delete
                                 </strong>
                             </a>
-                            <a href="#" class='button is-warning level-item'>
+                            <a href="#" class='button is-info level-item is-outlined '>
                                 <strong>
                                     Edit
                                 </strong>

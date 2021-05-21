@@ -8,19 +8,21 @@ from datetime import datetime
 from pytz import timezone
 bp = Blueprint("proctor", __name__, url_prefix="/proctor")
 
+IST = timezone("asia/kolkata")
+UTC = timezone('utc')
+
 def localToUtc(date):
-    IST = timezone("asia/kolkata")
-    UTC = timezone('utc')
     return IST.localize(date).astimezone(UTC)
 
 @bp.route("/", methods=["GET"])
 @login_required
 def index():
     ps = current_user.proctor_sessions
-    return render_template("proctor_home.html",proctor_session_data=ps)
+    now = UTC.localize(datetime.utcnow())
+    return render_template("proctor_home.html",proctor_session_data=ps, now=now)
 
 
-@bp.route("/session_create", methods=["GET", "POST"])
+@bp.route("/session/create", methods=["GET", "POST"])
 @login_required 
 def session_create():
     form = ProctorSessionForm()
@@ -32,11 +34,21 @@ def session_create():
         token_duration = (end_time - localToUtc(datetime.now())).total_seconds()
         print(start_time,end_time,duration)
         #create a Proctor Session
+        print(start_time, end_time)
         ps = ProctorSession(name=session_name, start_time=start_time, end_time=end_time, duration=duration, user_id=current_user)
         db.session.add(ps)
         susers = []
         for suser in form.session_users:
-             user = SessionUser(name=suser.username.data, email=suser.email.data, proctor_session=ps, token="token not set yet")
+             details = {}
+             details['disable_eye_detection'] = suser.disable_eye_detection.data
+
+             user = SessionUser(
+                                name=suser.username.data, 
+                                email=suser.email.data, 
+                                proctor_session=ps, 
+                                token="token not set yet",
+                                details=json.dumps(details)
+                            )
              db.session.add(user)
              susers.append(user)
         db.session.commit() #commit changes to db so that ids are assigned.
@@ -50,7 +62,7 @@ def session_create():
     else:
         return render_template("proctor_session_creator.html", form=form)
 
-@bp.route("/session_details/<id>")
+@bp.route("/session/details/<id>")
 @login_required
 def session_details(id):
     proctor_session = ProctorSession.query.get(id)

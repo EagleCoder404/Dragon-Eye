@@ -3,7 +3,7 @@
 
     <div class='container my-3'>
 
-        <form method="post" >
+        <form method="post" novalidate>
             <div class='box'>
                 <h1 class='title'>
                     Test Details
@@ -44,7 +44,7 @@
                             <div class='control'>
                                 {{form.end_time(class='input')}}
                             </div>
-                            <p class='help is-dange'>
+                            <p class='help is-danger'>
                                 {% for error in form.end_time.errors %}
                                     <span > {{error}} </span>
                                 {% endfor %}
@@ -53,44 +53,56 @@
                     </div>
                 </div>
             </div>
+            <div class='box'>
+                <div id='session-users-box' class=''>
+                    <h1 class='title'>
+                        Student Details
+                    </h1>
+                    {% for session_user in form.session_users %}
+                        <div>
+                            <div class='field'>
+                                <div class='control'>
+                                    <label class='checkbox'>
+                                        {{session_user.disable_eye_detection()}}
+                                        {{session_user.disable_eye_detection.label}}
+                                    </label>
+                                </div>
+                            </div>
+                            <div class='columns'>
+                                <div class='field column'>
+                                    <label class='label'>{{session_user.username.label}}</label>
+                                    <div class='control'>
+                                        {{session_user.username(class='input')}}
+                                    </div>
+                                    <p class='help is-danger'>
+                                        {% for error in session_user.username.errors %}
+                                            <span> {{error}}</span>
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                                <div class='field column'>
+                                    <label class='label'>{{session_user.email.label}}</label>
+                                    <div class='control'>
+                                        {{session_user.email(class="input")}}
+                                    </div>
+                                    <p class='help is-danger'> 
+                                        {% for error in session_user.email.errors %}
+                                            <span> {{error}}</span>
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
 
-            <div id='session-users-box' class='box'>
-                <h1 class='title'>
-                    Student Details
-                </h1>
-                {% for session_user in form.session_users %}
-                    <div class='columns'>
-                        <div class='field column'>
-                            <label class='label'>{{session_user.username.label}}</label>
-                            <div class='control'>
-                                {{session_user.username(class='input')}}
-                            </div>
-                            <p class='help is-danger'>
-                                {% for error in session_user.username.errors %}
-                                    <span> {{error}}</span>
-                                {% endfor %}
-                            </p>
                         </div>
-                        <div class='field column'>
-                            <label class='label'>{{session_user.email.label}}</label>
-                            <div class='control'>
-                                {{session_user.email(class="input")}}
-                            </div>
-                            <p class='help is-danger'> 
-                                {% for error in session_user.email.errors %}
-                                    <span style="color:red;display:block"> {{error}}</span>
-                                {% endfor %}
-                            </p>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class='field is-grouped'>
+                    {% endfor %}
+                </div>
                 <div class='control'>
                     <button onclick="addSessionUserForm(event)" id='add-user' class='button is-link is-outlined'>Add User</button>
                 </div>
+            </div>
+            <div class='field is-grouped'>
                 <div class='control'>
-                    {{form.submit(class="button is-success")}}
+                    {{form.submit(class="button is-success has-text-weight-bold")}}
                 </div>
             </div>
 
@@ -103,17 +115,27 @@
         let last_id=1;
         function renderSessionUserForm(id){
             return(`
-                <div class='columns'>
-                    <div class='field column'>
-                        <label class='label' for="session_users-${id}-username">Enter Name</label>
-                        <div class='control'>
-                            <input id="session_users-${id}-username" class="input" name="session_users-${id}-username" required="" type="text" >
+                <div>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input id="session_users-${id}-disable_eye_detection" name="session_users-${id}-disable_eye_detection" type="checkbox" value="y">
+                                <label for="session_users-${id}-disable_eye_detection">Disable Eye Detection ?</label>
+                            </label>
                         </div>
                     </div>
-                    <div class='column field'>
-                        <label class="label" for="session_users-${id}-email">Enter Email</label>
-                        <div class='control'>
-                            <input id="session_users-${id}-email" name="session_users-${id}-email" class='input' required="" type="text" >
+                    <div class='columns'>
+                        <div class='field column'>
+                            <label class='label' for="session_users-${id}-username">Enter Name</label>
+                            <div class='control'>
+                                <input id="session_users-${id}-username" class="input" name="session_users-${id}-username" required="" type="text" >
+                            </div>
+                        </div>
+                        <div class='column field'>
+                            <label class="label" for="session_users-${id}-email">Enter Email</label>
+                            <div class='control'>
+                                <input id="session_users-${id}-email" name="session_users-${id}-email" class='input' required="" type="text" >
+                            </div>
                         </div>
                     </div>
                 </div>

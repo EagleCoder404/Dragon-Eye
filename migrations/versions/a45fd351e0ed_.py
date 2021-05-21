@@ -21,8 +21,8 @@ def upgrade():
     op.create_table('proctor_session',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
-    sa.Column('start_time', sa.DateTime(), nullable=False),
-    sa.Column('end_time', sa.DateTime(), nullable=False),
+    sa.Column('start_time', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('end_time', sa.DateTime(timezone=True), nullable=False),
     sa.Column('duration', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )

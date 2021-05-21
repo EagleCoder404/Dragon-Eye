@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, Form, SelectField
-from wtforms.fields.core import FieldList, FormField
+from wtforms.fields.core import BooleanField, FieldList, FormField
 from wtforms.validators import InputRequired, EqualTo, Email, ValidationError
 from wtforms.fields.html5 import DateTimeLocalField
 from app.models import ProctorSession
@@ -20,6 +20,7 @@ class RegistrationForm(FlaskForm):
 
 class SessionUserForm(Form):
     username = StringField("Enter Name", validators=[InputRequired()])
+    disable_eye_detection = BooleanField("Disable Eye Detection ?")
     email = StringField("Enter Email", validators=[InputRequired(),Email()])
 
 class ProctorSessionForm(FlaskForm):

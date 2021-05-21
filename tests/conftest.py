@@ -1,14 +1,16 @@
 from attr import dataclass
 import pytest
 from app import create_app, db
-from app.models import User
+from app.models import User, SessionUser
 from pytz import timezone
 from datetime import datetime
+
 class TestConfiguration(object):
     TESTING = True
     WTF_CSRF_ENABLED = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory'
+    SECRET_KEY = "asd;asdjldfgdfgk'et'34l5'3j45'3j54;34jfiibeoirbfgo9eoejrgoierng"
 
 @pytest.fixture(scope='function')
 def app():
@@ -42,3 +44,7 @@ def end_time(start_time):
 
     return utc.localize(now)
 
+@pytest.fixture(scope='function')
+def new_session_user():
+    user = SessionUser(id='1', name="harsha", email='harsha@gmail.com')
+    return user
