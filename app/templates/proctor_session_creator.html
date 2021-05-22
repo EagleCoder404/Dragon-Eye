@@ -54,12 +54,13 @@
                 </div>
             </div>
             <div class='box'>
+                <h1 class='title'>
+                    Student Details
+                </h1>
                 <div id='session-users-box' class=''>
-                    <h1 class='title'>
-                        Student Details
-                    </h1>
                     {% for session_user in form.session_users %}
                         <div>
+
                             <div class='field'>
                                 <div class='control'>
                                     <label class='checkbox'>
@@ -68,7 +69,8 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class='columns'>
+
+                            <div class='field columns'>
                                 <div class='field column'>
                                     <label class='label'>{{session_user.username.label}}</label>
                                     <div class='control'>
@@ -80,6 +82,7 @@
                                         {% endfor %}
                                     </p>
                                 </div>
+
                                 <div class='field column'>
                                     <label class='label'>{{session_user.email.label}}</label>
                                     <div class='control'>
@@ -96,10 +99,31 @@
                         </div>
                     {% endfor %}
                 </div>
-                <div class='control'>
-                    <button onclick="addSessionUserForm(event)" id='add-user' class='button is-link is-outlined'>Add User</button>
+                <div class='field is-grouped pt-3'>
+                    
+                    <div class='control'>
+                        <button onclick="addSessionUserForm(event)" id='add-user' class='button is-link is-outlined'>Add User</button>
+                    </div>
+
+                    <div class='control'>
+                        <div class="file">
+                            <label class="file-label">
+                              <input class="file-input" type="file" name="resume" id='student-list-file'>
+                              <span class="file-cta">
+                                <span class="file-icon">
+                                  <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">
+                                  Choose a file
+                                </span>
+                              </span>
+                            </label>
+                          </div>
+                    </div>
                 </div>
+
             </div>
+
             <div class='field is-grouped'>
                 <div class='control'>
                     {{form.submit(class="button is-success has-text-weight-bold")}}
@@ -110,16 +134,65 @@
         </form>
 
     </div>
-
     <script>
+
+        function handleFile(e) {
+            var files = e.target.files, f = files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var data = new Uint8Array(e.target.result);
+                var workbook = XLSX.read(data, { type: 'array' });
+                let first_sheet_name = workbook.SheetNames[0];
+                let worksheet = workbook.Sheets[first_sheet_name];
+    
+                excelToJson(worksheet)
+                /* DO SOMETHING WITH workbook HERE */
+            };
+            reader.readAsArrayBuffer(f);
+        }
+    
+        function excelToJson(worksheet) {
+            const expected_headers = [{cell:'A1', value:'name'}, {cell:"B1", value:"email"}, {cell:'C1', value:"disable_eye_detection"}]
+            const validation_failed = false;
+    
+            expected_headers.forEach( validator => {
+                if(worksheet[validator.cell].v == validator.value)
+                    return true
+                else{
+                    alert(`${validator.cell} should be "${validator.value}"`)
+                    validation_failed=true
+                    return false;
+                }
+            })
+            if(validation_failed)
+            {
+                return null
+            }
+    
+            let json_ws = XLSX.utils.sheet_to_json(worksheet)
+            let id = 0
+            debugger;
+            $("#session-users-box").html("");
+            json_ws.forEach( user => {
+                const sessionUserForm = renderSessionUserForm(id, user);
+                $('#session-users-box').append(sessionUserForm)
+                id+=1;
+            })
+            last_id=id;
+        }
+
         let last_id=1;
-        function renderSessionUserForm(id){
+
+        function renderSessionUserForm(id, data={}){
+            data.name === undefined ? data.name = "":"";
+            data.email === undefined ? data.email = "":"";
+
             return(`
                 <div>
                     <div class="field">
                         <div class="control">
                             <label class="checkbox">
-                                <input id="session_users-${id}-disable_eye_detection" name="session_users-${id}-disable_eye_detection" type="checkbox" value="y">
+                                <input id="session_users-${id}-disable_eye_detection" name="session_users-${id}-disable_eye_detection" type="checkbox" value="y" ${data.disable_eye_detection ? "checked" : ""}>
                                 <label for="session_users-${id}-disable_eye_detection">Disable Eye Detection ?</label>
                             </label>
                         </div>
@@ -128,13 +201,13 @@
                         <div class='field column'>
                             <label class='label' for="session_users-${id}-username">Enter Name</label>
                             <div class='control'>
-                                <input id="session_users-${id}-username" class="input" name="session_users-${id}-username" required="" type="text" >
+                                <input id="session_users-${id}-username" class="input" name="session_users-${id}-username" value="${data.name}" required="" type="text" >
                             </div>
                         </div>
                         <div class='column field'>
                             <label class="label" for="session_users-${id}-email">Enter Email</label>
                             <div class='control'>
-                                <input id="session_users-${id}-email" name="session_users-${id}-email" class='input' required="" type="text" >
+                                <input id="session_users-${id}-email" name="session_users-${id}-email" class='input' required="" value="${data.email}" type="text" >
                             </div>
                         </div>
                     </div>
@@ -142,12 +215,14 @@
             `)
         }
         function addSessionUserForm(e){
-            console.log(e.preventDefault())
+            e.preventDefault()
             last_id += 1;
             const sessionUserForm = renderSessionUserForm(last_id)
             $('#session-users-box').append(sessionUserForm)
             window.location.hash='#add-user'
         }
+
+        document.getElementById("student-list-file").addEventListener("change", handleFile, false)
     </script>
 
 {% endblock proctor %}
