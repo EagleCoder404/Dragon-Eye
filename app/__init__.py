@@ -6,7 +6,7 @@ from flask_login import LoginManager
 from flask_moment import Moment
 from flask_httpauth import HTTPTokenAuth
 from flask_cors import CORS
-
+from flask_mail import Mail
 
 
 db = SQLAlchemy()
@@ -15,6 +15,7 @@ moment = Moment()
 tokenAuth = HTTPTokenAuth()
 login = LoginManager()
 cors = CORS()
+mail = Mail()
 login.login_view = 'auth.login'
 
 
@@ -27,7 +28,8 @@ def create_app(config_class=BaseConfiguration):
     moment.init_app(app)
     login.init_app(app)
     cors.init_app(app)
-
+    mail.init_app(app)
+    
     from app.blueprint import auth
     app.register_blueprint(auth.bp)
 

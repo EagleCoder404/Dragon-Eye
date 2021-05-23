@@ -1,3 +1,4 @@
+from flask.helpers import make_response
 from sqlalchemy.orm import eagerload
 from app.forms import ProctorSessionForm, ExamFormForm
 from app import db
@@ -6,6 +7,9 @@ from flask import Blueprint, render_template, redirect, url_for, json
 from flask_login import login_required, current_user
 from datetime import datetime
 from pytz import timezone
+
+from app.blueprint.helper.email_helpers import mail_all
+
 bp = Blueprint("proctor", __name__, url_prefix="/proctor")
 
 IST = timezone("asia/kolkata")
@@ -76,6 +80,26 @@ def session_details(id):
             form_description = json.loads(form_description_json)
         return render_template("proctor_session_details.html", data = proctor_session, exam_form = form_description)
 
+
+@bp.route("/session/<int:proctor_id>/mail/<string:user_id>")
+@bp.route("/session/<int:proctor_id>/mail/")
+def mail_session_user(proctor_id, user_id=None):
+    proctor_session = ProctorSession.query.get(proctor_id)
+    if proctor_session is None:
+        return make_response({"msg":"proctor sesssion not found"}, 404)
+    
+    target_user_list = []
+
+    if user_id is None:
+        target_user_list=proctor_session.session_users
+    else:
+        target_user = SessionUser.query.with_parent(proctor_session).filter_by(id=user_id).first()
+        if target_user is None:
+            return make_response({'msg':"user id not found"}, 404)
+        target_user_list = [target_user]
+    mail_all(proctor_session, target_user_list)
+    return make_response({"msg":"Success"}, 200)
+
 @bp.route("/exam_form/create/",methods=['GET',"POST"])
 @login_required
 def exam_form_create():
@@ -88,10 +112,7 @@ def exam_form_create():
         target_proctor_session = ProctorSession.query.get(proctor_id)
         
         for exam_question in form.exam_questions:
-        
-            q = { 
-                "question_text": exam_question.question.data
-            }
+            q = { "question_text": exam_question.question.data}
             questions.append(q)
         
         form_description = { 'exam_questions':questions }

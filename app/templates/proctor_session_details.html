@@ -56,6 +56,16 @@
                     {% endfor %}
                 </table>
             </div>
+            <div>
+                <button class='button is-primary' id='mail-all' onclick="mailMadi(event)" data-target-proctor="{{data.id}}"> 
+                    <span class='icon is-small'>
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <span>
+                        Mail Them All
+                    </span>
+                </button>
+            </div>
         </div>
 
         <div class='box'>
@@ -77,4 +87,20 @@
         </div>
         
 </div>
+<script>
+    function mailMadi(e){
+        $("#mail-all").addClass("is-loading");
+        let proctor_id = $("#mail-all").attr("data-target-proctor")
+        if(!proctor_id)
+            return
+        $.ajax({
+            url:`/proctor/session/${proctor_id}/mail/`,
+            method:"GET",
+        }).done( data => {
+            if(data.msg === "Success")
+                alert("Mailed Them All")
+            $('#mail-all').removeClass("is-loading");
+        })
+    }
+</script>
 {% endblock proctor %}
