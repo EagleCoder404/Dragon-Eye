@@ -5,14 +5,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
-
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id)) or SessionUser.query.get(int(id))
 
 @tokenAuth.verify_token
 def verify_token(token):
-    
     user = SessionUser.verify_auth_token(token)
     if user == "TOKEN_EXPIRE":
         return None
@@ -85,7 +83,7 @@ class SessionUser(db.Model, UserMixin):
 
 class ExamForm(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    form_description = db.Column(db.String(), nullable=False, unique=True)
+    form_description = db.Column(db.JSON(), nullable=False, default="{}")
     parent_user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     proctor_id = db.Column(db.Integer, db.ForeignKey("proctor_session.id"))
     exam_responses = db.relationship("ExamResponse", backref="exam_form", lazy='dynamic')

@@ -76,8 +76,7 @@ def session_details(id):
         form_description = None
         if proctor_session.exam_form.count() > 0 :
             exam_form = list(proctor_session.exam_form)[0]
-            form_description_json = exam_form.form_description
-            form_description = json.loads(form_description_json)
+            form_description = exam_form.form_description
         return render_template("proctor_session_details.html", data = proctor_session, exam_form = form_description)
 
 
@@ -116,8 +115,7 @@ def exam_form_create():
             questions.append(q)
             id+=1
         form_description = { 'exam_questions':questions }
-        form_description_json = json.dumps(form_description)
-        exam_form = ExamForm(user_id=current_user, proctor_session=target_proctor_session, form_description=form_description_json)
+        exam_form = ExamForm(user_id=current_user, proctor_session=target_proctor_session, form_description=form_description)
         
         db.session.add(exam_form)
         db.session.commit()
