@@ -60,6 +60,7 @@ class SessionUser(db.Model, UserMixin):
     details = db.Column(db.JSON(), default="\{\}")
     id_card = db.Column(db.String(), nullable=True)
     proctor_id = db.Column(db.Integer, db.ForeignKey('proctor_session.id'))
+    exam_response = db.relationship("ExamResponse", backref="session_user_id", uselist=False)
 
     def generate_auth_token(self, duration):
         s = Serializer(current_app.config['SECRET_KEY'], expires_in = duration)
@@ -87,6 +88,13 @@ class ExamForm(db.Model):
     form_description = db.Column(db.String(), nullable=False, unique=True)
     parent_user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     proctor_id = db.Column(db.Integer, db.ForeignKey("proctor_session.id"))
+    exam_responses = db.relationship("ExamResponse", backref="exam_form", lazy='dynamic')
 
     def __repr__(self):
         return f' - {self.id}  {self.form_description}'
+
+class ExamResponse(db.Model):
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    response = db.Column(db.JSON(), nullable=False)
+    examinee_id = db.Column(db.Integer, db.ForeignKey("session_user.id"))
+    exam_form_id = db.Column(db.Integer, db.ForeignKey("exam_form.id"))

@@ -110,11 +110,11 @@ def exam_form_create():
         proctor_id = form.proctor_id.data
         
         target_proctor_session = ProctorSession.query.get(proctor_id)
-        
+        id = 0
         for exam_question in form.exam_questions:
-            q = { "question_text": exam_question.question.data}
+            q = {"id":id, "question_text": exam_question.question.data}
             questions.append(q)
-        
+            id+=1
         form_description = { 'exam_questions':questions }
         form_description_json = json.dumps(form_description)
         exam_form = ExamForm(user_id=current_user, proctor_session=target_proctor_session, form_description=form_description_json)
