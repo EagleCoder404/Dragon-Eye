@@ -54,7 +54,7 @@ def update_answer():
     if exam_form != []:    
         exam_form = exam_form[0]
         if exam_response is None:
-            form_description = json.loads(exam_form.form_description)
+            form_description = exam_form.form_description
             response = { 'answer_data':[] }
             for id in range(len(form_description['exam_questions'])):
                 answer = { "id":id, "answer": ""}
@@ -86,8 +86,11 @@ def update_answer():
 @tokenAuth.login_required
 def get_question():
     exam_form = list(tokenAuth.current_user().proctor_session.exam_form)[0]
+    exam_response = tokenAuth.current_user().exam_response
     if exam_form is None:
         return make_response({"msg":"exam form hasn't been added yet"}, 400)
     else:
         form_description = exam_form.form_description
+        if exam_response is not None:
+            form_description['answer_data'] = exam_response.response['answer_data']
         return make_response({'data':form_description}, 200)
