@@ -78,18 +78,19 @@ def update_answer():
 
             return make_response({"msg":"Done"}, 200)
         else:
-            return make_response({"msg":"Empty Data Recived"}, 200)
+            return make_response({"msg":"Empty Data Recived"}, 400)
     else:
-        return make_response({"msg":"exam form has not be assigned to the test yer"}, 200)
+        return make_response({"msg":"exam form has not be assigned to the test yer"}, 204)
 
 @bp.route("/exam/question/get")
 @tokenAuth.login_required
 def get_question():
-    exam_form = list(tokenAuth.current_user().proctor_session.exam_form)[0]
+    exam_form = list(tokenAuth.current_user().proctor_session.exam_form)
     exam_response = tokenAuth.current_user().exam_response
     if exam_form is None:
-        return make_response({"msg":"exam form hasn't been added yet"}, 400)
+        return make_response({"msg":"exam form hasn't been added yet"}, 204)
     else:
+        exam_form = exam_form[0]
         form_description = exam_form.form_description
         if exam_response is not None:
             form_description['answer_data'] = exam_response.response['answer_data']
