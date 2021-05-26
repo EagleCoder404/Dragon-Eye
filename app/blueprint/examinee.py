@@ -87,7 +87,7 @@ def update_answer():
 def get_question():
     exam_form = list(tokenAuth.current_user().proctor_session.exam_form)
     exam_response = tokenAuth.current_user().exam_response
-    if exam_form is None:
+    if exam_form == []:
         return make_response({"msg":"exam form hasn't been added yet"}, 204)
     else:
         exam_form = exam_form[0]
