@@ -18,7 +18,7 @@ def test():
     print(tokenAuth.current_user())
     return "It Works"
 
-@bp.route("/id_card/", method=["POST"])
+@bp.route("/id_card/", methods=["POST"])
 @tokenAuth.login_required
 def add_id_card():
     data = request.get_json()
