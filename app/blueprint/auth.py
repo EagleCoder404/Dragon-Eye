@@ -51,7 +51,7 @@ def token_login(token):
         return {'msg':user}
     else:
         ps = user.proctor_session
-        data = { 'name':ps.name, 'id':ps.id,'start_time':ps.start_time,'end_time':ps.end_time,'duration':ps.duration}
+        data = { 'name':ps.name, 'id':ps.id,'start_time':ps.start_time,'end_time':ps.end_time,'duration':ps.duration, "submitted": user.submitted}
         return { 'msg':"GOOD_TOKEN", "data":data}
 
 
