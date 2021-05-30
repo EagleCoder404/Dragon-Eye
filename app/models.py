@@ -57,6 +57,7 @@ class SessionUser(db.Model, UserMixin):
     token = db.Column(db.String(), nullable=False)
     details = db.Column(db.JSON(), default="\{\}")
     id_card = db.Column(db.String(), nullable=True)
+    submitted = db.Column(db.Boolean(), nullable=False, default=False)
     proctor_id = db.Column(db.Integer, db.ForeignKey('proctor_session.id'))
     exam_response = db.relationship("ExamResponse", backref="session_user_id", uselist=False)
 
@@ -96,3 +97,4 @@ class ExamResponse(db.Model):
     response = db.Column(db.JSON(), nullable=False)
     examinee_id = db.Column(db.Integer, db.ForeignKey("session_user.id"))
     exam_form_id = db.Column(db.Integer, db.ForeignKey("exam_form.id"))
+

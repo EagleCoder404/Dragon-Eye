@@ -97,3 +97,10 @@ def get_question():
         if exam_response is not None:
             form_description['answer_data'] = exam_response.response['answer_data']
         return make_response({'data':form_description}, 200)
+
+@bp.route("/exam/submit")
+@tokenAuth.login_required
+def exam_submit():
+    tokenAuth.current_user().submitted = True
+    db.session.commit()
+    return make_response({'msg':'done'}, 200)    
