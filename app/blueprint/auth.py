@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, redirect, url_for, render_template, flash, jsonify
 from flask_login import login_user, logout_user
 from app.models import User, SessionUser
-from app import db
+from app import db, tokenAuth
 from app.forms import LoginForm, RegistrationForm
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -42,15 +42,13 @@ def register():
     return render_template('register.html', form=form)
 
 
-@bp.route("/token/<token>")
-def token_login(token):
-    user = SessionUser.verify_auth_token(token)
+@bp.route("/token")
+@tokenAuth.login_required
+def token_login():
+    user = tokenAuth.current_user()
     if user is None:
         return {'msg':'user not found'}
-    elif user.__class__ == str:
-        return {'msg':user}
     else:
-        print(user.submitted)
         ps = user.proctor_session
         data = { 'name':ps.name, 'id':ps.id,'start_time':ps.start_time,'end_time':ps.end_time,'duration':ps.duration, "submitted": user.submitted}
         return { 'msg':"GOOD_TOKEN", "data":data}
