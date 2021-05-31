@@ -50,6 +50,7 @@ def token_login(token):
     elif user.__class__ == str:
         return {'msg':user}
     else:
+        print(user.submitted)
         ps = user.proctor_session
         data = { 'name':ps.name, 'id':ps.id,'start_time':ps.start_time,'end_time':ps.end_time,'duration':ps.duration, "submitted": user.submitted}
         return { 'msg':"GOOD_TOKEN", "data":data}
