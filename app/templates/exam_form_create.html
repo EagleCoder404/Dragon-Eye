@@ -24,6 +24,11 @@
             {% for exam_question in form.exam_questions %}
                 <div class='field'>
                     <label class='label'>
+                        <span>
+                            <button class='button' onclick="deleteQuestion(event)">
+                                <i class='fas fa-times has-text-danger'></i>
+                            </button>
+                        </span> 
                         {{ exam_question.question.label }}
                     </label>
                     <div class='control'>
@@ -39,6 +44,7 @@
                 </div>
             {% endfor %}
         </div>
+
         <div class='field is-grouped'>
             <p class="control">
                 <button onclick="addQuestion(event)" class='button is-primary'>  Add Question </button>
@@ -47,6 +53,7 @@
                 {{ form.submit( class='button is-success is-outlined') }}
             </p>
         </div>
+
     </form>
 </div>
 <script>
@@ -54,12 +61,23 @@
     function renderQuestion(id){
         return(`
                 <div class="field">
-                    <label for="exam_questions-${id}-question" class='label'>Enter Question Text</label>
+                    
+                    <label for="exam_questions-${id}-question" class='label'>
+                        <span>
+                            <button class='button' onclick="deleteQuestion(event)">
+                                <i class='fas fa-times has-text-danger'></i>
+                            </button>
+                        </span> 
+                        Enter Question Text</label>
                     <div class='control'>
                         <input id="exam_questions-${id}-question" name="exam_questions-${id}-question" class="input" required="" type="text" >
                     </div>
                 </div>
         `)
+    }
+    function deleteQuestion(e){
+        e.preventDefault()
+        $(e.target).closest(".field").remove()
     }
     function addQuestion(e){
         e.preventDefault()

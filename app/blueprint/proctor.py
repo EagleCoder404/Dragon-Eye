@@ -77,7 +77,8 @@ def session_details(id):
         if proctor_session.exam_form.count() > 0 :
             exam_form = list(proctor_session.exam_form)[0]
             form_description = exam_form.form_description
-        return render_template("proctor_session_details.html", data = proctor_session, exam_form = form_description)
+        session_users = list(proctor_session.session_users)
+        return render_template("proctor_session_details.html", data = proctor_session, session_users=session_users, exam_form = form_description)
 
 
 @bp.route("/session/<int:proctor_id>/mail/<string:user_id>")

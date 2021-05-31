@@ -3,7 +3,7 @@
     <div class='container mt-3'>
 
         <div class='box'>
-            <h1 class='title is-capitalized'>
+            <h1 class='title is-capitalized has-text-info'>
                 {{data.name}}
             </h1>
             <h2 class='subtitle is-6'>
@@ -27,7 +27,7 @@
         </div>
 
         <div class='box'>
-            <h1 class='title is-capitalized'>
+            <h1 class='title is-capitalized has-text-info'>
                 Student Details
             </h1>
             <div class='table-container'>
@@ -41,7 +41,7 @@
                     </thead>
                     <tr class='is-primary'>
                     </tr>
-                    {% for user in data.session_users %}
+                    {% for user in session_users %}
                         <tr>
                             <td>
                                 {{user.name}}
@@ -69,14 +69,15 @@
         </div>
 
         <div class='box'>
-            <h1 class='title is-capitalized'>
+            <h1 class='title is-capitalized has-text-info'>
                 Exam Form Details
             </h1>
-            <h2 class='title is-5'>
-                Questions
-            </h2>
+ 
             <div class=" pl-3 is-flex is-flex-direction-column">
                 {% if exam_form != None %}
+                    <h2 class='title is-5'>
+                        Questions
+                    </h2>
                     {% for question in exam_form['exam_questions'] %}
                     <div>
                         {{ question['question_text'] }}
@@ -84,6 +85,41 @@
                     {% endfor %}
                 {% endif %}
             </div>
+        </div>
+        <div class='box'>
+            <h1 class='title is-capitzalized has-text-info'>
+                Exam Form Reponses
+            </h1>
+            <div class='container'>
+                {% for user in session_users %}
+                    {% if user.exam_response != None %}
+                        <div class='box'>
+                            <div class='columns'>
+                                <div class='column'>
+                                    {{user.id}}
+                                </div>
+                                <div class='column'>
+                                    {{user.name}}
+                                </div>
+                                <div class='column'>
+                                    {{user.email}}
+                                </div>
+                            </div>
+                            {% for answer in user.exam_response.response['answer_data'] %}
+                                <div class='mb-3'>
+                                    <b>
+                                        {{exam_form['exam_questions'][loop.index-1]['question_text']}}
+                                    </b>
+                                    <p>
+                                        {{answer['answer']}}
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
         </div>
         
 </div>
