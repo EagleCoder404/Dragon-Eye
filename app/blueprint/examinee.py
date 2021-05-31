@@ -101,6 +101,7 @@ def get_question():
 @bp.route("/exam/submit")
 @tokenAuth.login_required
 def exam_submit():
-    tokenAuth.current_user().submitted = True
+    current_user = tokenAuth.current_user()
+    current_user.submitted = True
     db.session.commit()
-    return make_response({'msg':'done'}, 200)    
+    return make_response({'msg':'done', "id":current_user.id}, 200)    
