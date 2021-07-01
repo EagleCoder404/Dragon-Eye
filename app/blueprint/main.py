@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
 bp = Blueprint("main",__name__,url_prefix="/")
 
@@ -9,6 +9,9 @@ def index():
     # test = socketio.async_mode
     return render_template('index.html')
 
-@bp.route("/excel_test")
+@bp.route("/test", methods=['GET', 'POST'])
 def excel_test():
-    return render_template("test_excel_parser.html")
+    print()
+    print(request.form.get("lol"))
+    print()
+    return render_template("test.html")

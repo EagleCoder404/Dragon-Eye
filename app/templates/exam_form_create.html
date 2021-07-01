@@ -1,6 +1,7 @@
 {% extends 'proctor_base.html' %}
 {% block proctor %}
 <div class='container mt-3'>
+    <script src="https://cdn.tiny.cloud/1/pnu5wcnai3tly3zznxfosz57byosojeu2hos40q5wgzomht3/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <form method="post">
 
         {{ form.hidden_tag() }}
@@ -13,41 +14,41 @@
             </div>
             <p class='help is-danger'>
                 {% for error in form.proctor_id.errors %}
+                <span>
+                    {{error}}
+                </span>
+                {% endfor %}
+            </p>
+        </div>
+
+        <div id="exam-questions-box" class='field'>
+            {% for exam_question in form.exam_questions %}
+            <div class='field box'>
+                <label class='label'>
+                    <span>
+                        <button class='button' onclick="deleteQuestion(event)">
+                            <i class='fas fa-times has-text-danger'></i>
+                        </button>
+                    </span>
+                    {{ exam_question.question.label }}
+                </label>
+                <div class='control'>
+                    {{ exam_question.question(class='textarea adv-editor') }}
+                </div>
+                <p class='help is-danger'>
+                    {% for error in exam_question.errors %}
                     <span>
                         {{error}}
                     </span>
-                {% endfor %} 
-            </p>
-        </div>
-        
-        <div id="exam-questions-box" class='field'>
-            {% for exam_question in form.exam_questions %}
-                <div class='field'>
-                    <label class='label'>
-                        <span>
-                            <button class='button' onclick="deleteQuestion(event)">
-                                <i class='fas fa-times has-text-danger'></i>
-                            </button>
-                        </span> 
-                        {{ exam_question.question.label }}
-                    </label>
-                    <div class='control'>
-                        {{ exam_question.question(class='input') }}
-                    </div>
-                    <p class='help is-danger'>
-                        {% for error in exam_question.errors %}
-                            <span>
-                                {{error}}
-                            </span>
-                        {% endfor %}
-                    </p>
-                </div>
+                    {% endfor %}
+                </p>
+            </div>
             {% endfor %}
         </div>
 
         <div class='field is-grouped'>
             <p class="control">
-                <button onclick="addQuestion(event)" class='button is-primary'>  Add Question </button>
+                <button onclick="addQuestion(event)" class='button is-primary'> Add Question </button>
             </p>
             <p class='control'>
                 {{ form.submit( class='button is-success is-outlined') }}
@@ -57,10 +58,21 @@
     </form>
 </div>
 <script>
-    let last_id=1;
-    function renderQuestion(id){
-        return(`
-                <div class="field">
+
+    let last_id = 1;
+
+    const editor_config = {
+        selector: '.adv-editor',
+        statusbar: false,
+        height:150,
+        plugins: "lists",
+        toolbar: "bold italic outdent indent numlist bullist",
+        menubar: false,
+    }
+
+    function renderQuestion(id) {
+        return (`
+                <div class="field box">
                     
                     <label for="exam_questions-${id}-question" class='label'>
                         <span>
@@ -70,20 +82,30 @@
                         </span> 
                         Enter Question Text</label>
                     <div class='control'>
-                        <input id="exam_questions-${id}-question" name="exam_questions-${id}-question" class="input" required="" type="text" >
+                        <textarea id="exam_questions-${id}-question" name="exam_questions-${id}-question" class="textarea adv-edit" ></textarea>
                     </div>
                 </div>
         `)
     }
-    function deleteQuestion(e){
+
+    function deleteQuestion(e) {
         e.preventDefault()
         $(e.target).closest(".field").remove()
     }
-    function addQuestion(e){
+
+    function addQuestion(e) {
         e.preventDefault()
         last_id += 1;
         const component = renderQuestion(last_id)
         $('#exam-questions-box').append(component)
+        tinymce.init({
+            ...editor_config,
+            selector: `#exam_questions-${last_id}-question`,
+        });
     }
+
+</script>
+<script>
+    tinymce.init(editor_config);
 </script>
 {% endblock proctor %}

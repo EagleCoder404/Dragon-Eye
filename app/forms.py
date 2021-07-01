@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, Form, SelectField
+from wtforms import StringField, PasswordField, SubmitField, Form, SelectField, TextAreaField
 from wtforms.fields.core import BooleanField, FieldList, FormField
 from wtforms.validators import InputRequired, EqualTo, Email, ValidationError
 from wtforms.fields.html5 import DateTimeLocalField
@@ -36,7 +36,7 @@ class ProctorSessionForm(FlaskForm):
             raise ValidationError("Name Taken, choose another")        
     
 class ExamQuestionForm(Form):
-    question = StringField("Enter Question Text", validators=[InputRequired()])
+    question = TextAreaField("Enter Question Text")
 
 class ExamFormForm(FlaskForm):
     proctor_id = SelectField("Proctor Session",coerce=int, validators=[InputRequired()])

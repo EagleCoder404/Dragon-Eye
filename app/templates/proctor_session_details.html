@@ -74,16 +74,14 @@
             </h1>
  
             <div class=" pl-3 is-flex is-flex-direction-column">
-                {% if exam_form != None %}
                     <h2 class='title is-5'>
                         Questions
                     </h2>
                     {% for question in exam_form['exam_questions'] %}
-                    <div>
-                        {{ question['question_text'] }}
-                    </div>
+                        <div>
+                            {{ question['question_text']|safe }}
+                        </div>
                     {% endfor %}
-                {% endif %}
             </div>
         </div>
         <div class='box'>
@@ -108,7 +106,7 @@
                             {% for answer in user.exam_response.response['answer_data'] %}
                                 <div class='mb-3'>
                                     <b>
-                                        {{exam_form['exam_questions'][loop.index-1]['question_text']}}
+                                        {{exam_form['exam_questions'][loop.index-1]['question_text']|safe}}
                                     </b>
                                     <p>
                                         {{answer['answer']}}

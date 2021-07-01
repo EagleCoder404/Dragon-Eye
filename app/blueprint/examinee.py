@@ -55,6 +55,7 @@ def update_answer():
 
     if exam_form != []:    
         exam_form = exam_form[0]
+        #for first time responses, init an exam_response row.
         if exam_response is None:
             form_description = exam_form.form_description
             response = { 'answer_data':[] }
@@ -64,7 +65,7 @@ def update_answer():
             exam_response = ExamResponse(response=response, session_user_id=current_user, exam_form=exam_form)
             db.session.add(exam_response)
             db.session.commit()
-
+        #if this not examinnes first response 
         if updated_answers_data['data'] != []:
             response = exam_response.response
             max_id = len(response['answer_data'])
