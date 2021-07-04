@@ -5,6 +5,9 @@
         <div class='box'>
             <h1 class='title is-capitalized has-text-info'>
                 {{data.name}}
+                <a class="button is-danger has-text-weight-bold" href="{{url_for('proctor.purge_session', proctor_id=data.id)}}">
+                    Purge
+                </a>
             </h1>
             <h2 class='subtitle is-6'>
                 Proctor Id : {{data.id}}

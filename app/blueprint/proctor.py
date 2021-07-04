@@ -123,3 +123,18 @@ def exam_form_create():
 
         return redirect(url_for("proctor.index"))
     return render_template("exam_form_create.html", form=form)
+
+@bp.route("/session/purge/<int:proctor_id>")
+@login_required
+def purge_session(proctor_id):
+    proctor_session = ProctorSession.query.get(proctor_id)
+    for session_user in proctor_session.session_users.all():
+        if session_user.exam_response is not None:
+            db.session.delete(session_user.exam_response)
+        db.session.delete(session_user)
+    for exam_form in proctor_session.exam_form.all():
+        db.session.delete(exam_form)
+    db.session.delete(proctor_session)
+    db.session.commit()
+    return redirect(url_for("proctor.index"))
+        
