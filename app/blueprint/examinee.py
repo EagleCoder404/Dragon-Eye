@@ -105,7 +105,7 @@ def exam_submit():
     current_user = tokenAuth.current_user()
     logs = request.get_json()['log_json']
     
-    log = Log.query.filter(token=current_user.token).first()
+    log = Log.query.filter_by(token=current_user.token).first()
     if log is None:
         log = Log(token=current_user.token)
         db.session.add(log)
