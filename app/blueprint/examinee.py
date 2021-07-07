@@ -3,7 +3,7 @@ from flask.globals import request
 from flask.helpers import make_response
 from flask_migrate import current
 from app import tokenAuth, db
-from app.models import ExamResponse
+from app.models import ExamResponse, Log
 from sqlalchemy.orm.attributes import flag_modified
 
 bp = Blueprint("examinee",__name__,url_prefix="/session")
@@ -102,9 +102,14 @@ def get_question():
 @bp.route("/exam/submit", methods=["GET", "POST"])
 @tokenAuth.login_required
 def exam_submit():
-    logs = request.get_json()
-    print(logs)
     current_user = tokenAuth.current_user()
+    logs = request.get_json()['log_json']
+    
+    log = Log.query.filter(token=current_user.token).first()
+    if log is None:
+        log = Log(token=current_user.token)
+        db.session.add(log)
+    log.proctoring_logs = logs
     current_user.submitted = True
     db.session.commit()
     return make_response({'msg':'done', "id":current_user.id}, 200)    

@@ -98,7 +98,8 @@ class ExamResponse(db.Model):
     examinee_id = db.Column(db.Integer, db.ForeignKey("session_user.id"))
     exam_form_id = db.Column(db.Integer, db.ForeignKey("exam_form.id"))
 
-class Logs(db.Model):
+class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(), index=True, nullable=False)
     proctoring_logs = db.Column(db.JSON(), nullable=False)
     
