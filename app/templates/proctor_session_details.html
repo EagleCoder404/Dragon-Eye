@@ -95,7 +95,7 @@
                 {% for user in session_users %}
                     {% if user.exam_response != None %}
                         <div class='box'>
-                            <div class='columns'>
+                            <div class='columns is-size-4 has-text-weight-semibold'>
                                 <div class='column'>
                                     {{user.id}}
                                 </div>
@@ -104,6 +104,14 @@
                                 </div>
                                 <div class='column'>
                                     {{user.email}}
+                                </div>
+                            </div>
+                            <div class='columns'>
+                                <div class='column'>
+                                    <img src="{{user.id_card}}" alt="user's id card">
+                                </div>
+                                <div class='column'>
+                                    <img src="" alt="user's face">
                                 </div>
                             </div>
                             {% for answer in user.exam_response.response['answer_data'] %}
