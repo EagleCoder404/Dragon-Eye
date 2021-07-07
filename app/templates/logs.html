@@ -1,0 +1,4 @@
+{{ ",".join(headers)}}<br>
+{% for log_row in log_csv %}
+{{ ",".join(log_row) }} <br>
+{% endfor %}
