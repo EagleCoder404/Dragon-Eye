@@ -99,9 +99,11 @@ def get_question():
             form_description['answer_data'] = exam_response.response['answer_data']
         return make_response({'data':form_description}, 200)
 
-@bp.route("/exam/submit")
+@bp.route("/exam/submit", methods=["GET", "POST"])
 @tokenAuth.login_required
 def exam_submit():
+    logs = request.get_json()
+    print(logs)
     current_user = tokenAuth.current_user()
     current_user.submitted = True
     db.session.commit()
