@@ -40,7 +40,7 @@ class ExamQuestionForm(Form):
 
 class ExamFormForm(FlaskForm):
     proctor_id = SelectField("Proctor Session",coerce=int, validators=[InputRequired()])
-    exam_questions = FieldList(FormField(ExamQuestionForm), min_entries=2)
+    exam_questions = FieldList(FormField(ExamQuestionForm), min_entries=1)
     submit = SubmitField("Create Exam Form")
 
     
