@@ -20,7 +20,7 @@ def excel_test():
 def get_all_logs():
     logs = Log.query.all()
     log_csv = []
-    headers = list(logs[0].proctoring_logs[0].keys())
+    headers = ["log_id"]+ list(logs[0].proctoring_logs[0].keys())
     for log in logs:
         for x in log.proctoring_logs:
             row = [log.id] + list(x.values())
