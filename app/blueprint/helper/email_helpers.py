@@ -7,7 +7,7 @@ def generateMessageBody(details):
     Hey There !.
     You have $test_name soon,
     it starts at $start_time, and ends at $end_time,
-    That's $duration minutes of hell, 
+    That's $duration minutes, 
 
     Use the Token below to login succesfully into our app.
     $token
