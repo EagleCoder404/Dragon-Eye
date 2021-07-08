@@ -43,6 +43,8 @@ def cumulative():
         face_sideways = 0
         eye_sideways = 0
         for x in log.proctoring_logs:
+            if "face_detection" not in x:
+                continue
             if(x['face_detection'] == "False"):
                 face_not_detected += 1
             if(x['face_recognition'] == "False"):
