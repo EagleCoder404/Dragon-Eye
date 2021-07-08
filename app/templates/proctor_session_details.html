@@ -108,10 +108,22 @@
                             </div>
                             <div class='columns'>
                                 <div class='column'>
-                                    <img src="{{user.id_card}}" alt="user's id card">
+                                    <figure class="image is-2by1">
+                                        <img src="{{user.id_card}}" alt="user's id card">
+                                    </figure>
                                 </div>
                                 <div class='column'>
-                                    <img src="" alt="user's face">
+                                    {% if user.submitted %}
+                                    <p> <b>Times Face Not Detected </b> {{user.log_data[1]}} </p>
+                                    <p> <b>Times Multi Face Detected </b> {{user.log_data[2]}} </p>
+                                    <p> <b>Times Face was not Recognized Detected </b> {{user.log_data[3]}} </p>
+                                    <p> <b>Times Face Went Sideways </b> {{user.log_data[4]}} </p>
+                                    <p> <b>Times Face Pupil went Sideways </b> {{user.log_data[5]}} </p>
+
+                                    
+
+                                    {% endif %}
+                                    <!-- <img src="" alt="user's face"> -->
                                 </div>
                             </div>
                             {% for answer in user.exam_response.response['answer_data'] %}

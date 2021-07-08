@@ -2,7 +2,7 @@ from flask.helpers import make_response
 from sqlalchemy.orm import eagerload
 from app.forms import ProctorSessionForm, ExamFormForm
 from app import db
-from app.models import ProctorSession, SessionUser, ExamForm
+from app.models import ProctorSession, SessionUser, ExamForm, Log
 from flask import Blueprint, render_template, redirect, url_for, json
 from flask_login import login_required, current_user
 from datetime import datetime
@@ -78,6 +78,33 @@ def session_details(id):
             exam_form = list(proctor_session.exam_form)[0]
             form_description = exam_form.form_description
         session_users = list(proctor_session.session_users)
+        for su in session_users:
+            if su.submitted:
+                log = Log.query.filter_by(token=su.token).first()
+                headers = ["log_id"]+ list(log.proctoring_logs[0].keys())
+                headers.remove("frame_id")
+                face_not_detected = 0
+                face_not_recognized = 0
+                face_multi = 0 
+                face_sideways = 0
+                eye_sideways = 0
+                for x in log.proctoring_logs:
+                    if "face_detection" not in x:
+                        continue
+                    if(x['face_detection'] == "False"):
+                        face_not_detected += 1
+                    if(x['face_recognition'] == "False"):
+                        face_not_recognized += 1           
+                    if(x['multiple_face'] == "True"):
+                        face_mult += 1
+                    if(x["face_alignment"] == "left" or x['face_alignment'] == "right"):
+                        face_sideways += 1
+                    if(x['eye_position'] == "left" or x['eye_position'] == "right"):
+                        eye_sideways += 1
+                log_data = [log.id, face_not_detected, face_multi, face_not_recognized, face_sideways, eye_sideways]
+                log_data = list(map(str, log_data))
+                print(log_data)
+                su.log_data = log_data
         return render_template("proctor_session_details.html", data = proctor_session, session_users=session_users, exam_form = form_description)
 
 
