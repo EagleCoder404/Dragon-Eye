@@ -50,7 +50,7 @@ def cumulative():
             if(x['face_recognition'] == "False"):
                 face_not_recognized += 1           
             if(x['multiple_face'] == "True"):
-                face_mult += 1
+                face_multi += 1
             if(x["face_alignment"] == "left" or x['face_alignment'] == "right"):
                 face_sideways += 1
             if(x['eye_position'] == "left" or x['eye_position'] == "right"):
