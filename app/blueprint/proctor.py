@@ -86,11 +86,13 @@ def session_details(id):
                 face_not_detected = 0
                 face_not_recognized = 0
                 face_multi = 0 
+                frame=1
                 face_sideways = 0
                 eye_sideways = 0
                 for x in log.proctoring_logs:
                     if "face_detection" not in x:
                         continue
+                    frame+=1
                     if(x['face_detection'] == "False"):
                         face_not_detected += 1
                     if(x['face_recognition'] == "False"):
@@ -101,7 +103,15 @@ def session_details(id):
                         face_sideways += 1
                     if(x['eye_position'] == "left" or x['eye_position'] == "right"):
                         eye_sideways += 1
+
+                face_not_detected/=frame*(1/100)
+                face_multi/=frame*(1/100)
+                face_not_recognized/=frame*(1/100)
+                face_sideways/=frame*(1/100)
+                eye_sideways/=frame*(1/100)
+                round_2 = lambda x: round(x, 2)
                 log_data = [log.id, face_not_detected, face_multi, face_not_recognized, face_sideways, eye_sideways]
+                log_data = list(map(round_2, log_data ))
                 log_data = list(map(str, log_data))
                 print(log_data)
                 su.log_data = log_data
