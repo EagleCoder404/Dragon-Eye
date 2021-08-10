@@ -2,22 +2,24 @@
 
 {% block content %}
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-    <div class='navbar-start '>
-        <a class="navbar-item" href="{{url_for('proctor.index')}}">
+<nav class="navbar  m-3" role="navigation" aria-label="main navigation">
+    <div class='navbar-start p-3 '>
+        <a class="navbar-item has-text-white has-background-dark box mr-2" href="{{url_for('proctor.index')}}">
             Home
         </a>
-        <a class="navbar-item" href="{{url_for('proctor.session_create')}}">
+        <a class="navbar-item has-text-white has-background-dark box mr-2" href="{{url_for('proctor.session_create')}}">
             Create Session
         </a>
-        <a class="navbar-item" href="{{url_for('proctor.exam_form_create')}}">
+        <a class="navbar-item has-text-white has-background-dark box mr-2" href="{{url_for('proctor.exam_form_create')}}">
             Create Exam Form
         </a>
+        <a></a>
     </div>
-    <div class='navbar-end'>
-        <a class="navbar-item" href="{{url_for('auth.logout')}}">
+    <div class='navbar-end p-3'>
+        <a class="navbar-item has-text-white has-background-dark box mr-2" href="{{url_for('auth.logout')}}">
             Logout
         </a>
+        <a></a>
     </div>
 </nav>
 {% block proctor %}

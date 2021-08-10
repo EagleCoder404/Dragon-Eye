@@ -4,13 +4,13 @@
     <div class='container my-3'>
 
         <form method="post" novalidate>
+            <h1 class="is-size-1 title"> Create an Exam </h1>
             <div class='box'>
-                <h1 class='title'>
-                    Test Details
-                </h1>
-                {{form.hidden_tag()}}
-    
                 <div class='field'>
+                    <h1 class=' is-size-3 has-text-weight-semibold mb-5 has-text-info'>
+                        Test Details
+                    </h1>
+                    {{form.hidden_tag()}}
                     <label class='label'>
                         {{form.session_name.label}} <br>
                     </label>
@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class='box'>
-                <h1 class='title'>
+                <h1 class='is-size-3 has-text-weight-semibold mb-5 has-text-info'>
                     Student Details
                 </h1>
                 <div id='session-users-box' class=''>

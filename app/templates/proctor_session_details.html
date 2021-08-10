@@ -73,16 +73,15 @@
 
         <div class='box'>
             <h1 class='title is-capitalized has-text-info'>
-                Exam Form Details
+                Exam Form 
             </h1>
  
             <div class=" pl-3 is-flex is-flex-direction-column">
-                    <h2 class='title is-5'>
-                        Questions
-                    </h2>
+
                     {% for question in exam_form['exam_questions'] %}
-                        <div>
-                            {{ question['question_text']|safe }}
+                        <div class="is-flex if-flex-direction-row">
+                            <p class="pr-2"> {{loop.index}} )</p>
+                           {{ question['question_text']|safe }}
                         </div>
                     {% endfor %}
             </div>
@@ -114,11 +113,42 @@
                                 </div>
                                 <div class='column'>
                                     {% if user.submitted %}
-                                    <p> <b>Times Face Not Detected </b> {{user.log_data[1]}} </p>
+                                    <table class='table'>
+                                        <thead>
+                                            <tr>
+                                                <th> Metric </th>
+                                                <th> Percentage </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Times Face Not Detected</td>
+                                                <td>{{user.log_data[1]}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Times Multi Face Detected</td>
+                                                <td>{{user.log_data[2]}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Times Face was not Recognized Detected</td>
+                                                <td>{{user.log_data[3]}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Times Face Went Sideways</td>
+                                                <td>{{user.log_data[4]}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Times Face Pupil went Sideways</td>
+                                                <td>{{user.log_data[5]}}</td>
+                                            </tr>
+                                        </tbody>
+                                        
+                                    </table>
+                                    <!-- <p> <b>Times Face Not Detected </b> {{user.log_data[1]}} </p>
                                     <p> <b>Times Multi Face Detected </b> {{user.log_data[2]}} </p>
                                     <p> <b>Times Face was not Recognized Detected </b> {{user.log_data[3]}} </p>
                                     <p> <b>Times Face Went Sideways </b> {{user.log_data[4]}} </p>
-                                    <p> <b>Times Face Pupil went Sideways </b> {{user.log_data[5]}} </p>
+                                    <p> <b>Times Face Pupil went Sideways </b> {{user.log_data[5]}} </p> -->
 
                                     
 

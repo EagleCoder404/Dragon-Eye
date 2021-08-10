@@ -3,10 +3,11 @@
 <div class='container mt-3'>
     <script src="https://cdn.tiny.cloud/1/pnu5wcnai3tly3zznxfosz57byosojeu2hos40q5wgzomht3/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <form method="post">
+        <h1 class="is-size-1 title"> Create an Exam Form </h1>
 
         {{ form.hidden_tag() }}
         <div class='field'>
-            <label for="" class='label'>
+            <label for="" class='label mb-4'>
                 {{form.proctor_id.label}}
             </label>
             <div class='select'>
@@ -23,14 +24,14 @@
 
         <div id="exam-questions-box" class='field'>
             {% for exam_question in form.exam_questions %}
-            <div class='field box'>
-                <label class='label'>
+            <div class='field '>
+                <label class='label is-flex is-align-content-center is-flex-direction-row is-justify-content-space-between'>
+                    {{ exam_question.question.label }}
                     <span>
-                        <button class='button' onclick="deleteQuestion(event)">
-                            <i class='fas fa-times has-text-danger'></i>
+                        <button class='button has-background-danger' onclick="deleteQuestion(event)" >
+                            <i class='fas fa-times has-text-white has-background-danger'></i>
                         </button>
                     </span>
-                    {{ exam_question.question.label }}
                 </label>
                 <div class='control'>
                     {{ exam_question.question(class='textarea adv-editor') }}
@@ -73,15 +74,16 @@
 
     function renderQuestion(id) {
         return (`
-                <div class="field box">
+                <div class="field ">
                     
-                    <label for="exam_questions-${id}-question" class='label'>
+                    <label class='label is-flex is-align-content-center is-flex-direction-row is-justify-content-space-between'>
+                        <span> Enter Question Text </span>
                         <span>
-                            <button class='button' onclick="deleteQuestion(event)">
-                                <i class='fas fa-times has-text-danger'></i>
+                            <button class='button has-background-danger' onclick="deleteQuestion(event)" >
+                                <i class='fas fa-times has-text-white has-background-danger'></i>
                             </button>
-                        </span> 
-                        Enter Question Text</label>
+                        </span>
+                    </label>
                     <div class='control'>
                         <textarea id="exam_questions-${id}-question" name="exam_questions-${id}-question" class="textarea adv-edit" ></textarea>
                     </div>
