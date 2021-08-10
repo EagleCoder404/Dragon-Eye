@@ -24,6 +24,11 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    user_type = db.Column(db.String(6), default="TEACH")
+    
+    admin_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    admin = db.relationship("User", remote_side=[id])
+
     proctor_sessions = db.relationship("ProctorSession", backref="user_id", lazy='dynamic')
     exam_forms = db.relationship("ExamForm", backref="user_id", lazy='dynamic')
 

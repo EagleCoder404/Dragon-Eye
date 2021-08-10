@@ -4,7 +4,7 @@ from wtforms import StringField, PasswordField, SubmitField, Form, SelectField, 
 from wtforms.fields.core import BooleanField, FieldList, FormField
 from wtforms.validators import InputRequired, EqualTo, Email, ValidationError
 from wtforms.fields.html5 import DateTimeLocalField
-from app.models import ProctorSession
+from app.models import ProctorSession, User
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[InputRequired()])
@@ -17,6 +17,24 @@ class RegistrationForm(FlaskForm):
     confirm = PasswordField("Confirm Password", validators=[InputRequired(), EqualTo('password', 'Password should Match!')])
     email = StringField("Email", validators=[InputRequired(), Email()])
     submit = SubmitField("Register!")
+
+class TeacherRegistrationForm(FlaskForm):
+    admin_code = StringField("Admin Code", validators=[InputRequired()])
+    username = StringField('Username', validators=[InputRequired()])
+    password = PasswordField('Enter Password', validators=[InputRequired()])
+    confirm = PasswordField("Confirm Password", validators=[InputRequired(), EqualTo('password', 'Password should Match!')])
+    email = StringField("Email", validators=[InputRequired(), Email()])
+    submit = SubmitField("Register!")
+
+    def validate_admin_code(form, field):
+        admin_id = field.data
+        if not admin_id.isnumeric():
+            raise ValidationError("Enter a Number")
+        else:
+            admin_id = int(admin_id)
+            user = User.query.get(admin_id)
+            if user is None or user.user_type!="ADMIN":
+                raise ValidationError("Unkown Admin Code")
 
 class SessionUserForm(Form):
     username = StringField("Enter Name", validators=[InputRequired()])

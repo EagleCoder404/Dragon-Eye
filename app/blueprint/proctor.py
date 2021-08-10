@@ -2,7 +2,7 @@ from flask.helpers import make_response
 from sqlalchemy.orm import eagerload
 from app.forms import ProctorSessionForm, ExamFormForm
 from app import db
-from app.models import ProctorSession, SessionUser, ExamForm, Log
+from app.models import ProctorSession, SessionUser, ExamForm, Log, User
 from flask import Blueprint, render_template, redirect, url_for, json
 from flask_login import login_required, current_user
 from datetime import datetime
@@ -23,7 +23,8 @@ def localToUtc(date):
 def index():
     ps = current_user.proctor_sessions
     now = UTC.localize(datetime.utcnow())
-    return render_template("proctor_home.html",proctor_session_data=ps, now=now)
+    return render_template("proctor_home.html",proctor_session_data=ps, now=now, user_type=current_user.user_type)
+
 
 
 @bp.route("/session/create", methods=["GET", "POST"])

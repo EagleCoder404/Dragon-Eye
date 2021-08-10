@@ -5,6 +5,12 @@
     object-position: bottom;
     object-fit: cover;
 }
+.no-exam{
+    background-image: url("../media/no_exams.png");
+    object-position: 50% 50%;
+    object-fit:cover;
+    background-repeat:no-repeat;
+}
 .is-opacity-90{
     opacity: 90%;
 }

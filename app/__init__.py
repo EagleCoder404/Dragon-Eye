@@ -39,6 +39,9 @@ def create_app(config_class=BaseConfiguration):
     from app.blueprint import proctor
     app.register_blueprint(proctor.bp)
 
+    from app.blueprint import admin
+    app.register_blueprint(admin.bp)
+
     from app.blueprint import main
     app.register_blueprint(main.bp)
 

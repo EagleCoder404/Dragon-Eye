@@ -1,7 +1,9 @@
 {% extends 'proctor_base.html' %}
 {% block proctor %}
     <div class='container is-centered mt-3'>
+        {% if proctor_session_data.count() != 0 %}
         <h1 class='is-size-2 has-text-weight-bold'>All Proctor Sessions</h1>
+        {% endif %}
         <div class='is-flex is-flex-direction-column'>
             {% for x in proctor_session_data %}
                 <div class='box'>
@@ -48,8 +50,10 @@
                     </div>
 
                 </div>
-            {% endfor %}
-
-        </div>
+            </div>
+        {% endfor %}
+        {% if proctor_session_data.count() == 0%}
+        <div class="hero is-fullheight no-exam mt-5 py-5"></div>
+        {% endif %}
     </div>
 {% endblock proctor %}

@@ -1,0 +1,42 @@
+{% extends 'admin_base.html' %}
+{% block admin %}
+        <h1 class='is-size-2 has-text-weight-bold has-text-centered'>All Teacher Accounts</h1>
+        <div class='is-flex is-flex-direction-column'>
+            {% for teacher in teachers %}
+                <div class='box'>
+                    <div class='level'>
+                        <div class='level-left'>
+                            <h1 class='level-item has-text-weight-medium is-capitalized is-size-5'>
+                                {{teacher.username}}
+                            </h1>
+                            <h1 class='level-item has-text-weight-medium  is-size-5'>
+                                {{teacher.email}}
+                            </h1>
+                        </div>
+                        <div class='level-right'>
+                            <a href="{{url_for('admin.delete_teacher', id=teacher.id)}}" class='button is-danger is-outlined level-item'>
+                                <strong>
+                                    Delete
+                                </strong>
+                            </a>
+                            {% if teacher.user_type=="ATEACH" %}
+                                <a href="{{url_for('admin.accept_teacher', id=teacher.id)}}" class='button is-success is-outlined level-item'>
+                                    <strong>
+                                        Accept
+                                    </strong>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+
+            {% if teachers.count() == 0 %}
+                <div>
+                    Such Empty
+                </div>
+            {% endif %}
+
+        </div>
+{% endblock admin %}
